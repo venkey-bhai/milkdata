@@ -107,8 +107,8 @@ export default function Reports() {
         return (
           (!filters.id ||
             String(report.id) === String(filters.id)) &&
-          (!filters.customer_id ||
-            String(report.customer_id) === String(filters.customer_id)) &&
+          (!filters.customer_no ||
+            String(report.customer_no) === String(filters.customer_no)) &&
           (!filters.customer_name ||
             report.customer_name === filters.customer_name) &&
           (!filters.session || report.session === filters.session) &&
@@ -116,6 +116,8 @@ export default function Reports() {
             String(report.total_liters) === filters.total_liters) &&
           (!filters.total_amount ||
             String(report.total_amount) === filters.total_amount) &&
+          (!filters.milk_type ||
+            report.milk_type === filters.milk_type) &&
           (!filters.date || report.date === filters.date)
         );
       })
@@ -209,7 +211,7 @@ export default function Reports() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  {["customer_id", "customer_name", "session", "total_liters", "total_amount", "date","action"].map(
+                  {["customer_no", "customer_name", "session", "total_liters", "total_amount", "milk_type", "date","action"].map(
                     (key) => (
                       <th className="p-2" key={key}>
                         {key === "action" ? (
@@ -218,10 +220,10 @@ export default function Reports() {
                           <select
                             name={key}
                             value={filters[key]}
-                            onChange={handleFilterChange}
+                            onChange={handleFilterChange}                                                                                                                                                                                                                                                                                                                                             
                             className="w-full p-2 border rounded"
                           >
-                            <option value="">All {key}</option>
+                            <option value=""> {key}</option>
 
                             {[...new Set(reports.map((r) => r[key]))].map(
                               (val, i) => (
@@ -244,15 +246,17 @@ export default function Reports() {
                     const reportId = report.id ?? report.report_id ?? report.reportId ?? report._id;
                     return (
                       <tr key={reportId ?? index} className="border-t hover:bg-gray-50">
-                        <td className="p-3">{report.customer_id}</td>
+                        <td className="p-3">{report.customer_no}</td>
                         <td className="p-3 font-medium">
                           {report.customer_name}
                         </td>
                         <td className="p-3">{report.session}</td>
+                        
                         <td className="p-3">{report.total_liters}</td>
                         <td className="p-3 text-green-600 font-semibold">
                           ₹{report.total_amount}
                         </td>
+                        <td className="p-3">{report.milk_type}</td>
                         <td className="p-3">{report.date}</td>
                         <td className="p-3">
                           <button

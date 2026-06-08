@@ -8,6 +8,7 @@ export default function Customers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [statusUpdating, setStatusUpdating] = useState(null);
 
   // ===== ADD CUSTOMER MODAL =====
   const [showAddCustomer, setShowAddCustomer] = useState(false);
@@ -135,9 +136,9 @@ export default function Customers() {
   const handleEdit = async (customer) => {
     const newName = prompt("Enter new customer name", customer.name);
     const newPhone = prompt("Enter new customer phone", customer.phone);
-    const newcustomer_no = prompt("Enter new customer phone", customer.customer_no);
+    const newcustomer_no = prompt("Enter new customer no", customer.customer_no);
+    const newaddress = prompt("Enter new customer address", customer.address);
 
-    
     if (!newName) return;
 
     try {
@@ -152,12 +153,13 @@ export default function Customers() {
             Authorization: `Bearer ${token}`
           },
           body: JSON.stringify({
-            customer_no: newCustomer_no,
+            customer_no: newcustomer_no,
             name: newName,
             phone: newPhone,
-            address: customer.address,
+            address: newaddress,
             milk_type: customer.milk_type,
-            price_per_liter: customer.price_per_liter
+            price_per_liter: customer.price_per_liter,
+            status: customer.status ?? (customer.is_active ? "active" : "inactive")
           })
         }
       );
@@ -172,6 +174,52 @@ export default function Customers() {
       fetchCustomers();
     } catch (err) {
       alert(err.message);
+    }
+  };
+
+  // ================= TOGGLE STATUS =================
+  const handleToggleStatus = async (customer) => {
+    const token = localStorage.getItem("token");
+    const currentStatus =
+      customer.status?.toString().toLowerCase() === "active" ||
+      customer.is_active === true;
+    const updatedStatus = currentStatus ? "inactive" : "active";
+
+    setStatusUpdating(customer.id);
+
+    try {
+      const response = await fetch(
+        // `http://127.0.0.1:8000/customer/${customer.id}`,
+        `http://127.0.0.1:8000/customer/${customer.id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            customer_no: customer.customer_no,
+            name: customer.name,
+            phone: customer.phone,
+            address: customer.address,
+            milk_type: customer.milk_type,
+            price_per_liter: customer.price_per_liter,
+            status: updatedStatus,
+            is_active: updatedStatus === "active"
+          })
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to update status");
+      }
+
+      fetchCustomers();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setStatusUpdating(null);
     }
   };
 
@@ -241,6 +289,7 @@ export default function Customers() {
                   <th className="p-3">Name</th>
                   <th className="p-3">Phone</th>
                   <th className="p-3">address</th>
+                  <th className="p-3">Status</th>
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
@@ -256,6 +305,38 @@ export default function Customers() {
                       <td className="p-3 font-medium">{customer.name}</td>
                       <td className="p-3">{customer.phone}</td>
                        <td className="p-3">{customer.address}</td>
+                      <td className="p-3">
+                        <div className="flex flex-col gap-2">
+                          <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                              customer.status?.toString().toLowerCase() === "active" ||
+                              customer.is_active === true
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {customer.status
+                              ? customer.status
+                              : customer.is_active === true
+                              ? "Active"
+                              : "Inactive"}
+                          </span>
+
+                          <button
+                            onClick={() => handleToggleStatus(customer)}
+                            disabled={statusUpdating === customer.id}
+                            className="rounded bg-blue-500 px-1 py-1 text-white hover:bg-blue-600 disabled:opacity-50"
+                          >
+                            {statusUpdating === customer.id
+                              ? "Updating..."
+                              : customer.status?.toString().toLowerCase() === "active" ||
+                                customer.is_active === true
+                              ? "Deactivate"
+                              : "Activate"}
+                          </button>
+                        </div>
+                      </td>
+                       
 
                       <td className="p-3 flex gap-2">
                         <button
@@ -277,7 +358,7 @@ export default function Customers() {
                 ) : (
                   <tr>
                     <td
-                      colSpan="4"
+                      colSpan="6"
                       className="p-5 text-center text-gray-500"
                     >
                       No customers found

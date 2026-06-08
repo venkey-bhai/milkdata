@@ -8,6 +8,8 @@ import Sidebar from "../../components/Navbar";
 const parseResponseData = async (response) => {
   const contentType = response.headers.get("content-type") || "";
 
+ 
+
   if (!contentType.includes("application/json")) {
     return null;
   }
@@ -55,6 +57,8 @@ export default function Admin() {
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
+    console.log("Stored token:", token);
+    
 
     return token
       ? {
@@ -107,7 +111,16 @@ export default function Admin() {
 
     try {
       const token = localStorage.getItem("token");
-      const adminUsername = localStorage.getItem("username");
+      const storedUsername = localStorage.getItem("username") || "";
+      const adminUsername = window.prompt(
+        "Enter admin username:",
+        storedUsername
+      );
+
+
+    // Debug logs
+    console.log("token:", token);
+    console.log("adminUsername:", adminUsername);
 
       if (!token || !adminUsername) {
         router.push("/login");
@@ -118,11 +131,11 @@ export default function Admin() {
         "Enter admin password:"
       );
 
-      if (!adminPassword) {
-        setError("Admin password required");
-        setCreating(false);
+       if (!adminUsername || !adminPassword) {
+        setError("Admin credentials required");
         return;
       }
+
 
       const response = await fetch(
         `http://127.0.0.1:8000/admin/create-user?admin_username=${adminUsername}&admin_password=${adminPassword}`,
@@ -162,6 +175,8 @@ export default function Admin() {
     }
   };
 
+ 
+
   // ================= DELETE USER =================
   const deleteUser = async (id) => {
     const confirmDelete = window.confirm(
@@ -174,20 +189,17 @@ export default function Admin() {
 
     try {
       const token = localStorage.getItem("token");
-      let adminUsername = localStorage.getItem("username");
+      const storedUsername = localStorage.getItem("username") || "";
+      const adminUsername = window.prompt(
+        "Enter admin username:",
+        storedUsername
+      );
 
       if (!token) {
         setError("Please log in again.");
         router.push("/login");
         return;
       }
-
-      if (!adminUsername) {
-        adminUsername = window.prompt(
-          "Enter admin username:"
-        );
-      }
-
       const adminPassword = window.prompt(
         "Enter admin password:"
       );
@@ -198,17 +210,16 @@ export default function Admin() {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/admin/delete-user/${id}`,
+        `http://127.0.0.1:8000/admin/delete-user/${id}?admin_username=${encodeURIComponent(
+          adminUsername
+        )}&admin_password=${encodeURIComponent(adminPassword)}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             ...getAuthHeaders(),
           },
-          body: JSON.stringify({
-            username: adminUsername,
-            password: adminPassword,
-          }),
+        
         }
       );
 
@@ -379,9 +390,7 @@ export default function Admin() {
                   className="w-full border p-3 rounded"
                 >
                   <option value="user">User</option>
-                  <option value="milk_entry">
-                    Milk Entry
-                  </option>
+                 
                   <option value="admin">Admin</option>
                 </select>
 
@@ -405,7 +414,7 @@ export default function Admin() {
 
                 </div>
               </form>
-            </div>
+            </div>  
           </div>
         )}
       </div>
