@@ -23,15 +23,15 @@ const API =
   process.env.NEXT_PUBLIC_API_URL ||
   "http://127.0.0.1:8000";
 
-  // Fetch Loans
+//    Fetch Loans
   const fetchLoans = async () => { 
       setLoading(true);
       setError("");
 
       try {
-        // const url = customerNo
-        //   ? `${API}/loans/${customerNo}`
-        //   : `${API}/loans`;
+        const url = customerNo
+          ? `${API}/loan/${customerNo}`
+          : `${API}/loan`;
 
         const res =
           await fetch(`http://127.0.0.1:8000/loan`, {
@@ -67,48 +67,70 @@ const API =
       if (!selectedLoan) {
         return;
       }
-
+      console.log("Selected Loan:", selectedLoan);
       setLoading(true);
       setError("");
 
-      try {
-        const res = await fetch(`${API}/${selectedLoan.id}/deduct`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            milk_sale_amount: Number(form.milk_sale_amount),
-            deduct_amount: Number(form.deduct_amount),
-          }),
-        });
+     try {
+  console.log("Deducting with ID:", selectedLoan.id);
+  const res = await fetch(
+    `${API}/${selectedLoan.id}/deduct`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        milk_sale_amount: Number(
+          form.milk_sale_amount
+        ),
+        deduct_amount: Number(
+          form.deduct_amount
+        ),
+      }),
+    }
+  );
+  
+  console.log("Response Status:", res.status);
 
-        const result = await res.json();
+  const result = await res.json();
+  
+  console.log("Response Result:", result);
 
-        if (!res.ok) {
-          throw new Error(result.detail || "Failed to update loan");
-        }
+  if (!res.ok) {
+    throw new Error(
+      result.detail ||
+      "Failed to update loan"
+    );
+  }
 
-        alert("Loan Updated Successfully");
+  alert("Loan Updated Successfully");
 
-        setSelectedLoan(null);
-        setForm({
-          milk_sale_amount: "",
-          deduct_amount: "",
-        });
+  setSelectedLoan(null);
 
-        await fetchLoans();
-      } catch (err) {
-        console.error(err);
-        const message = err?.message || "Failed to update loan";
-        setError(message);
-        alert(message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  setForm({
+    milk_sale_amount: "",
+    deduct_amount: "",
+  });
 
-  const formatCurrency =
+  await fetchLoans();
+
+} catch (err) {
+  
+  console.error(err);
+
+  setError(
+    err.message ||
+    "Failed to update loan"
+  );
+
+  alert(
+    err.message ||
+    "Failed to update loan"
+  );
+} 
+  }
+const formatCurrency =
     (amount) =>
       new Intl.NumberFormat(
         "en-IN",
@@ -119,7 +141,9 @@ const API =
       ).format(
         amount || 0
       );
+    
 
+  
   return (
     <div className="min-h-screen bg-gray-100 flex">
 
@@ -203,7 +227,7 @@ const API =
 
                             <td className="p-4 text-center">
                               {formatCurrency(
-                                loan.total_loan
+                              loan.total_loan
                               )}
                             </td>
 

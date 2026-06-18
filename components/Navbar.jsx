@@ -12,6 +12,7 @@ const navItems = [
   { href: "/sales", label: "Sales" },
   { href: "/monthlyReport", label: "Monthly Sales Report" },
   { href: "/monthlyBuyingReport", label: "Monthly Buying Report" },
+  { href: "/loan/create", label: "Create Loan" },
   { href: "/loan", label: "Loan Management" },
   { href: "/logout", label: "Logout" }
 ];
@@ -41,7 +42,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <div className={`${menuOpen ? "block" : "hidden"} md:block px-5 pb-10 md:pb-0`}>
+      <div className={`${menuOpen ? "block" : "hidden"} md:block px-5 pb-10 md:pb-0 md:max-h-[calc(100vh-120px)] md:overflow-hidden hover:md:overflow-y-auto`}>
         <ul className="space-y-4">
           {navItems.map((item) => (
             <li key={item.href}>
