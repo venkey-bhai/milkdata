@@ -5,10 +5,10 @@ from sqlalchemy import extract
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-from db.models import SaleBill, SaleItem
-from schemas.sales import SaleBillCreate
+from app.db.models import SaleBill, SaleItem
+from app.schemas.sales import SaleBillCreate
 
-router = APIRouter(prefix="/sales", tags=["Sales"])
+router = APIRouter(prefix="/sales", tags=["Sales"]) 
 
 
 @router.post("/create-bill")
@@ -23,6 +23,7 @@ def create_bill(request: SaleBillCreate, db: Session = Depends(get_db)):
         bill_date=request.bill_date,
         rate_perliter=request.rate_perliter,
         total_amount=total_amount,
+         session=request.session,
     )
 
     db.add(bill)
@@ -95,6 +96,7 @@ def get_bill(
             "id": bill.id,
             "customer_name": bill.customer_name,
             "bill_date": bill.bill_date,
+            "session": bill.session,
             "rate_perliter": bill.rate_perliter,
             "total_amount": bill.total_amount,
             "items": [
@@ -152,6 +154,7 @@ def sales_report(db: Session = Depends(get_db)):
             SaleBill.id,
             SaleBill.customer_name,
             SaleBill.bill_date,
+            SaleBill.session,
             SaleItem.product_name,
             SaleItem.quantity,
             SaleItem.rate,
@@ -172,6 +175,7 @@ def sales_report(db: Session = Depends(get_db)):
             "customer_name": row.customer_name,
             "bill_date": row.bill_date,
             "product_name": row.product_name,
+             "session": row.session,
             "quantity": row.quantity,
             "rate": row.rate,
             "amount": row.amount,
@@ -254,3 +258,47 @@ def monthly_sales_report(
 #         "data": records,
 #         "total_amount": total
 #     }
+
+@router.put("/bill/{bill_id}")
+def update_bill(bill_id: int, request: SaleBillCreate, db: Session = Depends(get_db)):
+
+    bill = db.query(SaleBill).filter(SaleBill.id == bill_id).first()
+
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+
+    bill.customer_name = request.customer_name
+    bill.bill_date = request.bill_date
+    bill.rate_perliter = request.rate_perliter
+    bill.session = request.session
+
+    db.query(SaleItem).filter(SaleItem.bill_id == bill_id).delete()
+
+    total_amount = 0
+    new_items = []
+
+    for item in request.items:
+        amount = item.quantity * item.rate
+        total_amount += amount
+
+        new_items.append(
+            SaleItem(
+                bill_id=bill.id,
+                product_name=item.product_name,
+                quantity=item.quantity,
+                rate=item.rate,
+                amount=amount
+            )
+        )
+
+    bill.total_amount = total_amount
+
+    db.add_all(new_items)
+    db.commit()
+    db.refresh(bill)
+
+    return {
+        "success": True,
+        "message": "Bill updated successfully",
+        "data": bill
+    }

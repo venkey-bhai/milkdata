@@ -1,9 +1,10 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# from app.core.deps import get_current_user
+from app.core.deps import get_current_user
 from app.db.database import Base, engine
-from app.routers import auth, customer, milk_entry, report, admin, sales
+from app.routers import auth, customer, loan, milk_entry, report, admin, sales,loan
+from app.schemas import Loan
 
 app = FastAPI(title="Milk Buyer Management System")
 
@@ -26,6 +27,7 @@ app.include_router(milk_entry.router)
 app.include_router(report.router )
 app.include_router(admin.router)
 app.include_router(sales.router)
+app.include_router(loan.router)
 
 
 

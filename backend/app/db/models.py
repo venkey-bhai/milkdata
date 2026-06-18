@@ -1,5 +1,7 @@
 
-from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey,Boolean
+import datetime
+
+from sqlalchemy import Column, DateTime, Integer, String, Float, Date, ForeignKey,Boolean
 from .database import Base
 from sqlalchemy.orm import relationship
 
@@ -48,6 +50,7 @@ class SaleBill(Base):
     bill_date = Column(Date)
     rate_perliter = Column(Float)
     total_amount = Column(Float)
+    session = Column(String(20))
 
     items = relationship(
         "SaleItem",
@@ -76,3 +79,13 @@ class SaleItem(Base):
     )
 
     
+class Loan(Base): 
+    __tablename__ = "loans" 
+    id = Column(Integer, primary_key=True, index=True)
+    customer_no = Column( Integer, ForeignKey("customers.customer_no"), nullable=False ) 
+    total_loan = Column( Float, default=0 )
+    deducted_amount = Column( Float, default=0 )
+    remaining_balance = Column( Float, default=0 ) 
+    milk_sale_amount = Column( Float, default=0 ) 
+    final_payable = Column( Float, default=0 ) 
+    created_at = Column( DateTime, default=datetime.datetime.utcnow )

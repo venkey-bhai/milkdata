@@ -29,14 +29,15 @@ export default function LoginPage() {
       // ✅ Dynamic route based on dropdown
       const endpoint =
         role === "admin"
-          ? "http://127.0.0.1:8000/admin/login"
-          : "http://127.0.0.1:8000/login";
-
+           ? "http://127.0.0.1:8000/admin/login"
+           : "http://127.0.0.1:8000/login";
+          // ? "https://gs75dhlh-8000.inc1.devtunnels.ms/admin/login"
+          // : "https://gs75dhlh-8000.inc1.devtunnels.ms/login";
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type":
-            "application/x-www-form-urlencoded",
+             "application/x-www-form-urlencoded",  
         },
         body: formData,
       });
@@ -172,7 +173,7 @@ export default function LoginPage() {
         {/* ================= LOGIN BUTTON ================= */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition"
+          className="w-full rounded-lg border border-black bg-white p-3 text-sm font-semibold text-black transition hover:bg-gray-100"
         >
           Login
         </button>

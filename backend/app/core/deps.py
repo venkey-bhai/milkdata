@@ -9,7 +9,7 @@ from app.core.security import (
 )
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/login"
+    tokenUrl="/admin/login"
 )
 
 # ================= GET CURRENT USER =================

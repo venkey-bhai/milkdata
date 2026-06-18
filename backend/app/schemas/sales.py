@@ -10,4 +10,5 @@ class SaleBillCreate(BaseModel):
     customer_name: str
     bill_date: date
     rate_perliter: float
+    session: str
     items: list[SaleItemCreate]

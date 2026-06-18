@@ -83,15 +83,16 @@ def admin_login(
         User.username == username
     ).first()
 
-    print(admin.username)
-    print(admin.role)
-
+   
     if not admin:
         raise HTTPException(
             status_code=401,
             detail="Invalid username"
         )
 
+    print(admin.username)
+    print(admin.role)
+    
     if admin.role != "admin":
         raise HTTPException(
             status_code=403,

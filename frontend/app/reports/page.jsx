@@ -172,30 +172,28 @@ export default function Reports() {
       <Sidebar />
 
       <div className="p-10 flex-1">
-        <h1 className="text-3xl font-bold mb-5">Monthly Reports</h1>
+        <h1 className="text-3xl font-bold mb-5 text-slate-900">Monthly Reports</h1>
 
         {/* DATE FILTER */}
-        <div className="mb-5 flex gap-4">
-  {/* From Date */}
-  <input
-    type="date"
-    value={selectedDate}
-    onChange={handleDateChange}
-    className="p-3 border rounded-lg"
-  />
+        <div className="mb-5 flex flex-wrap gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            className="rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"
+          />
 
-  {/* To Date */}
-  <input
-    type="date"
-    value={endDate}
-    onChange={(e) => {
-      const v = e.target.value;
-      setEndDate(v);
-      fetchReports(selectedDate, v);
-    }}
-    className="p-3 border rounded-lg"
-  />
-</div>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => {
+              const v = e.target.value;
+              setEndDate(v);
+              fetchReports(selectedDate, v);
+            }}
+            className="rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"
+          />
+        </div>
         {/* ERROR */}
         {error && (
           <div className="bg-red-100 text-red-600 p-3 mb-4 rounded">
@@ -207,23 +205,23 @@ export default function Reports() {
         {loading ? (
           <p>Loading reports...</p>
         ) : (
-          <div className="bg-white p-5 rounded shadow overflow-x-auto">
-            <table className="w-full border-collapse">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-gray-50">
-                  {["customer_no", "customer_name", "session", "total_liters", "total_amount", "milk_type", "date","action"].map(
+                <tr className="bg-slate-50 text-left">
+                  {["customer_no", "customer_name", "session", "total_liters", "total_amount", "milk_type", "date", "action"].map(
                     (key) => (
-                      <th className="p-2" key={key}>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600" key={key}>
                         {key === "action" ? (
                           <span>Action</span>
                         ) : (
                           <select
                             name={key}
                             value={filters[key]}
-                            onChange={handleFilterChange}                                                                                                                                                                                                                                                                                                                                             
-                            className="w-full p-2 border rounded"
+                            onChange={handleFilterChange}
+                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-slate-400"
                           >
-                            <option value=""> {key}</option>
+                            <option value="">All {key}</option>
 
                             {[...new Set(reports.map((r) => r[key]))].map(
                               (val, i) => (
@@ -245,25 +243,25 @@ export default function Reports() {
                   filteredReports.map((report, index) => {
                     const reportId = report.id ?? report.report_id ?? report.reportId ?? report._id;
                     return (
-                      <tr key={reportId ?? index} className="border-t hover:bg-gray-50">
-                        <td className="p-3">{report.customer_no}</td>
-                        <td className="p-3 font-medium">
+                      <tr key={reportId ?? index} className="border-t border-slate-100 even:bg-slate-50/60 hover:bg-slate-100/70 transition-colors">
+                        <td className="px-4 py-3 text-slate-700">{report.customer_no}</td>
+                        <td className="px-4 py-3 font-medium text-slate-900">
                           {report.customer_name}
                         </td>
-                        <td className="p-3">{report.session}</td>
+                        <td className="px-4 py-3 text-slate-700">{report.session}</td>
                         
-                        <td className="p-3">{report.total_liters}</td>
-                        <td className="p-3 text-green-600 font-semibold">
+                        <td className="px-4 py-3 text-slate-700">{report.total_liters}</td>
+                        <td className="px-4 py-3 font-semibold text-emerald-700">
                           ₹{report.total_amount}
                         </td>
-                        <td className="p-3">{report.milk_type}</td>
-                        <td className="p-3">{report.date}</td>
-                        <td className="p-3">
+                        <td className="px-4 py-3 text-slate-700">{report.milk_type}</td>
+                        <td className="px-4 py-3 text-slate-700">{report.date}</td>
+                        <td className="px-4 py-3">
                           <button
                             onClick={() => deleteReport(reportId)}
-                            className="w-full bg-red-600 text-white p-3 rounded hover:bg-blue-700 transition"
+                            className="inline-flex items-center justify-center rounded-md bg-rose-100 px-1 py-0 text-xs font-semibold text-black-300 shadow-sm ring-1 ring-rose-100 transition hover:bg-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:ring-offset-2"
                           >
-                            delete
+                            Delete
                           </button>
                         </td>
                       </tr>
@@ -272,8 +270,8 @@ export default function Reports() {
                 ) : (
                   <tr>
                     <td
-                      colSpan="7"
-                      className="p-5 text-center text-gray-500"
+                      colSpan="8"
+                      className="px-5 py-8 text-center text-slate-500"
                     >
                       No reports found
                     </td>
@@ -288,21 +286,21 @@ export default function Reports() {
         <div className="flex gap-4 mb-5 mt-6">
           <a
             href="http://127.0.0.1:8000/reports/csv"
-            className="bg-green-600 text-white px-4 py-2 rounded"
+            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-2 py-0 text-sm font-semibold text-black transition hover:bg-orange-100"
           >
             Download CSV
           </a>
 
           <a
             href="http://127.0.0.1:8000/reports/excel"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-2 py-0 text-sm font-semibold text-black transition hover:bg-pink-100"
           >
             Download Excel
           </a>
 
           <a
             href="http://127.0.0.1:8000/reports/pdf"
-            className="bg-red-600 text-white px-4 py-2 rounded"
+            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-2 py-0 text-sm font-semibold text-black transition hover:bg-blue-100"
           >
             Download PDF
           </a>

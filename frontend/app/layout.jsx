@@ -2,8 +2,12 @@ import "./globals.css";
 
 export const metadata = {
   title: "Milk Buyer App",
-  description: "Milk Buyer Management System",
-  viewport: { width: "device-width", initialScale: 1 }
+  description: "Milk Buyer Management System"
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1
 };
 
 export default function RootLayout({ children }) {

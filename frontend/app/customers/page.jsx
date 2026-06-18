@@ -244,24 +244,24 @@ export default function Customers() {
       {/* Main Content */}
       <div className="p-10 flex-1">
 
-        <h1 className="text-3xl font-bold mb-5">
+        <h1 className="text-3xl font-bold mb-5 text-slate-900">
           Customer Management
         </h1>
 
         {/* SEARCH + ADD BUTTON */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="mb-5 flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
 
           <input
             type="text"
             placeholder="Search customers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full md:w-1/3 p-3 border rounded-lg"
+            className="w-full md:w-1/3 rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"
           />
 
           <button
             onClick={() => setShowAddCustomer(true)}
-            className="ml-4 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg"
+            className="ml-4 inline-flex items-center justify-center rounded-lg border border-black bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-gray-100"
           >
             + Add Customer
           </button>
@@ -279,18 +279,18 @@ export default function Customers() {
         {loading ? (
           <div className="p-5">Loading customers...</div>
         ) : (
-          <div className="bg-white p-5 rounded shadow overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse text-sm">
 
               <thead>
-                <tr className="bg-gray-100 text-left">
-                  <th className="p-3">Cus.No</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Phone</th>
-                  <th className="p-3">address</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Actions</th>
+                <tr className="bg-slate-50 text-left">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Cus.No</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Name</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Phone</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Address</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Status</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Actions</th>
                 </tr>
               </thead>
 
@@ -299,13 +299,13 @@ export default function Customers() {
                   filteredCustomers.map((customer) => (
                     <tr
                       key={customer.id}
-                      className="border-t hover:bg-gray-50"
+                      className="border-t border-slate-100 even:bg-slate-50/60 hover:bg-slate-100/70 transition-colors"
                     >
-                      <td className="p-3">{customer.customer_no}</td>
-                      <td className="p-3 font-medium">{customer.name}</td>
-                      <td className="p-3">{customer.phone}</td>
-                       <td className="p-3">{customer.address}</td>
-                      <td className="p-3">
+                      <td className="px-4 py-3 text-slate-700">{customer.customer_no}</td>
+                      <td className="px-4 py-3 font-medium text-slate-900">{customer.name}</td>
+                      <td className="px-4 py-3 text-slate-700">{customer.phone}</td>
+                       <td className="px-4 py-3 text-slate-700">{customer.address}</td>
+                      <td className="px-4 py-3">
                         <div className="flex flex-col gap-2">
                           <span
                             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
@@ -325,7 +325,7 @@ export default function Customers() {
                           <button
                             onClick={() => handleToggleStatus(customer)}
                             disabled={statusUpdating === customer.id}
-                            className="rounded bg-blue-500 px-1 py-1 text-white hover:bg-blue-600 disabled:opacity-50"
+                            className="inline-flex w-fit items-center rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {statusUpdating === customer.id
                               ? "Updating..."
@@ -338,20 +338,22 @@ export default function Customers() {
                       </td>
                        
 
-                      <td className="p-3 flex gap-2">
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap gap-2">
                         <button
                           onClick={() => handleEdit(customer)}
-                          className="bg-blue-500 text-white px-3 py-1 rounded"
+                            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
                         >
                           Edit
                         </button>
 
                         <button
                           onClick={() => handleDelete(customer.id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded"
+                            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
                         >
                           Delete
                         </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -359,7 +361,7 @@ export default function Customers() {
                   <tr>
                     <td
                       colSpan="6"
-                      className="p-5 text-center text-gray-500"
+                      className="px-5 py-8 text-center text-slate-500"
                     >
                       No customers found
                     </td>
@@ -435,14 +437,14 @@ export default function Customers() {
 
               <button
                 onClick={() => setShowAddCustomer(false)}
-                className="px-4 py-2 bg-gray-400 text-white rounded"
+                className="rounded-md border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleAddCustomer}
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="rounded-md border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
               >
                 Save
               </button>
