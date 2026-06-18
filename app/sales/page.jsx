@@ -410,9 +410,7 @@ export default function Sales() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() =>
-                router.push(
-                  `/bill/${row.id}?session=${encodeURIComponent(getSessionValue(row))}`
-                )
+              router.push(`/bill/?id=${row.id}&session=${encodeURIComponent(getSessionValue(row))}`)
               }
               className="rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100"
             >

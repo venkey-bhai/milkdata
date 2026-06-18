@@ -1,134 +1,12 @@
-// 'use client';
-
-// import { useEffect, useState } from 'react';
-// import { useParams } from 'next/navigation';
-
-// export default function BillDetailPage() {
-//   const params = useParams();
-//   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-//   const [bill, setBill] = useState(null);
-//   const [error, setError] = useState('');
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     if (!id) {
-//       setError('Bill id is missing');
-//       setLoading(false);
-//       return;
-//     }
-
-//     const controller = new AbortController();
-
-//     const loadBill = async () => {
-//       try {
-//         const res = await fetch(`http://127.0.0.1:8000/sales/bill/${id}`, {
-//           signal: controller.signal,
-//         });
-
-//         if (!res.ok) {
-//           throw new Error('Unable to load bill');
-//         }
-
-//         const data = await res.json();
-
-//         const billData = data?.data ?? data?.bill ?? data;
-
-//         setBill(billData);
-//       } catch (err) {
-//         if (err.name !== 'AbortError') {
-//           setError(err.message);
-//         }
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     loadBill();
-
-//     return () => controller.abort();
-//   }, [id]);
-
-//   // ⭐ FIXED SESSION LOGIC (IMPORTANT CHANGE)
-//   const sessionLabel = bill?.session ?? bill?.session_name ?? bill?.shift ??  'N/A';
-
-//   if (loading) return <p>Loading bill...</p>;
-//   if (error) return <p>Error: {error}</p>;
-//   if (!bill) return <p>No bill found</p>;
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-6">
-//       <div className="mx-auto max-w-3xl">
-//          <div id="invoice" className="bg-white p-6 shadow">
-//         <div className="bg-white p-6 shadow">
-
-//           <h1 className="text-center text-2xl font-bold mb-4">
-//             SALES INVOICE
-//           </h1>
-
-//           <div className="mb-4 flex justify-between">
-//             <div>
-//               <p><strong>Customer:</strong> {bill.customer_name}</p>
-//               <p><strong>Date:</strong> {bill.bill_date}</p>
-//             </div>
-
-//             <div className="text-right">
-//               <p><strong>Session:</strong> {sessionLabel}</p>
-//             </div>
-//           </div>
-
-//           <table className="w-full border">
-//             <thead>
-//               <tr className="bg-gray-200">
-//                 <th className="border p-2">Product</th>
-//                 <th className="border p-2">Qty</th>
-//                 <th className="border p-2">Rate</th>
-//                 <th className="border p-2">Amount</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {bill.items?.map((item, index) => (
-//                 <tr key={index}>
-//                   <td className="border p-2">{item.product_name}</td>
-//                   <td className="border p-2">{item.quantity}</td>
-//                   <td className="border p-2">₹{item.rate}</td>
-//                   <td className="border p-2">
-//                     ₹{item.amount ?? item.quantity * item.rate}
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-
-//           <div className="mt-4 text-right font-bold">
-//             Total: ₹{bill.total_amount}
-//           </div>
-
-//           <button
-//             onClick={() => window.print()}
-//              className="mt-6 rounded border border-black bg-white px-6 py-2 text-black transition hover:bg-gray-100 print:hidden"
-//           >
-//             Print Bill
-//           </button>
-
-//         </div>
-//       </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 export default function EditBillPage() {
-  const { id } = useParams();
   const router = useRouter();
-
+  const searchParams = useSearchParams();
+  
   const [formData, setFormData] = useState({
     customer_name: '',
     bill_date: '',
@@ -139,13 +17,27 @@ export default function EditBillPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
 
   // ---------------- FETCH BILL ----------------
   useEffect(() => {
     const fetchBill = async () => {
       try {
+        const id = searchParams.get("id");
+        console.log("ID from searchParams:", id);
+        
+        if (!id) {
+          console.log("No ID found in URL");
+          setLoading(false);
+          setError("No bill ID provided");
+          return;
+        }
+        
+        console.log("Fetching bill with ID:", id);
         const res = await fetch(`http://127.0.0.1:8000/sales/bill/${id}`);
         const data = await res.json();
+        
+        console.log("API Response:", data);
 
         const bill = data.data;
 
@@ -158,14 +50,16 @@ export default function EditBillPage() {
         });
 
         setLoading(false);
+        setError(null);
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching bill:", err);
+        setError(err.message);
         setLoading(false);
       }
     };
 
-    if (id) fetchBill();
-  }, [id]);
+    fetchBill();
+  }, [searchParams]);
 
   // ---------------- HANDLE INPUT ----------------
   const handleChange = (e) => {
@@ -230,6 +124,7 @@ export default function EditBillPage() {
 
   // ---------------- UI ----------------
   if (loading) return <p className="p-5">Loading...</p>;
+  if (error) return <p className="p-5 text-red-600">Error: {error}</p>;
 
  return (
   <div className="min-h-screen bg-slate-100 py-8 px-4">
