@@ -110,14 +110,14 @@ export default function AdminRegisterPage() {
 
         <button
           onClick={handleRegister}
-          className="w-full bg-green-600 text-white p-3 rounded"
+          className="w-full rounded-lg border border-black bg-white p-3 text-sm font-semibold text-black transition hover:bg-gray-100"
         >
           Register
         </button>
 
         <button
           onClick={() => router.push("/login")}
-          className="w-full bg-blue-600 text-white p-3 rounded mt-4"
+          className="mt-4 w-full rounded-lg border border-black bg-white p-3 text-sm font-semibold text-black transition hover:bg-gray-100"
         >
           Login
         </button>

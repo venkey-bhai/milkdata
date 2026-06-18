@@ -203,7 +203,8 @@ export default function MilkEntry() {
 
             <button
               type="submit"
-              className="bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700"
+              // className="rounded-lg border border-black bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-gray-100"
+              className="px-2 py-0 bg-blue-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
             >
               Save Entry
             </button>

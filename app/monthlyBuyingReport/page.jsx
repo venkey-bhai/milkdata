@@ -93,7 +93,7 @@ export default function MonthlyBuyingReport() {
 
             <button
               onClick={handlePrint}
-              className="rounded-lg bg-green-600 px-4 py-2 text-white shadow hover:bg-green-700"
+              className="rounded-lg border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
             >
               🖨 Print Report
             </button>
@@ -141,7 +141,7 @@ export default function MonthlyBuyingReport() {
               <button
                 onClick={fetchReport}
                 disabled={loading}
-                className="rounded-lg bg-blue-600 px-4 py-3 font-medium text-white shadow hover:bg-blue-700 disabled:opacity-50"
+                className="rounded-lg border border-black bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-gray-100 disabled:opacity-50"
               >
                 {loading ? "Loading..." : "Get Report"}
               </button>
@@ -161,7 +161,7 @@ export default function MonthlyBuyingReport() {
             className="rounded-xl bg-white p-6 shadow-md"
           >
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-slate-900">
                 {monthName} {year} Buying Report
               </h2>
             </div>
@@ -175,33 +175,34 @@ export default function MonthlyBuyingReport() {
                 <div id="invoice" className="bg-white p-6 shadow">
                 <table className="w-full border-collapse text-sm">
                   <thead>
-                    <tr className="bg-gray-200 text-gray-700">
-                      <th className="border p-3 text-left">#</th>
-                      <th className="border p-3 text-left">Customer No</th>
-                      <th className="border p-3 text-left">Customer Name</th>
-                      <th className="border p-3 text-left">Milk Type</th>
-                      <th className="border p-3 text-right">Total Liters</th>
-                      <th className="border p-3 text-right">Total Amount</th>
+                    <tr className="bg-slate-50 text-slate-700">
+                      <th className="border border-slate-100 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">#</th>
+                      <th className="border border-slate-100 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Customer No</th>
+                      <th className="border border-slate-100 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Customer Name</th>
+                      <th className="border border-slate-100 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Milk Type</th>
+                      <th className="border border-slate-100 px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider">Total Liters</th>
+                      <th className="border border-slate-100 px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider">Total Amount</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {filteredReport.length > 0 ? (
                       filteredReport.map((row, index) => (
+                        
                         <tr
                           key={row.customer_no}
-                          className="hover:bg-gray-50"
+                          className="border-t border-slate-100 even:bg-slate-50/60 hover:bg-slate-100/70 transition-colors"
                         >
-                          <td className="border p-3">{index + 1}</td>
-                          <td className="border p-3">{row.customer_no}</td>
-                          <td className="border p-3">
+                          <td className="border border-slate-100 px-4 py-3 text-slate-700">{index + 1}</td>
+                          <td className="border border-slate-100 px-4 py-3 text-slate-700">{row.customer_no}</td>
+                          <td className="border border-slate-100 px-4 py-3 text-slate-900">
                             {row.customer_name}
                           </td>
-                          <td className="border p-3">{row.milk_type}</td>
-                          <td className="border p-3 text-right">
+                          <td className="border border-slate-100 px-4 py-3 text-slate-700">{row.milk_type}</td>
+                          <td className="border border-slate-100 px-4 py-3 text-right text-slate-700">
                             {row.total_liters}
                           </td>
-                          <td className="border p-3 text-right font-medium text-green-700">
+                          <td className="border border-slate-100 px-4 py-3 text-right font-semibold text-emerald-700">
                             {formatCurrency(row.total_amount)}
                           </td>
                         </tr>
@@ -210,7 +211,7 @@ export default function MonthlyBuyingReport() {
                       <tr>
                         <td
                           colSpan="6"
-                          className="border p-6 text-center text-gray-500"
+                          className="border border-slate-100 px-6 py-8 text-center text-slate-500"
                         >
                           No records found
                         </td>
@@ -219,14 +220,14 @@ export default function MonthlyBuyingReport() {
                   </tbody>
 
                   <tfoot>
-                    <tr className="bg-green-100 font-bold text-gray-800">
-                      <td colSpan="4" className="border p-3 text-right">
+                    <tr className="bg-emerald-50 font-bold text-slate-800">
+                      <td colSpan="4" className="border border-slate-100 px-4 py-3 text-right">
                         Grand Total
                       </td>
-                      <td className="border p-3 text-right">
+                      <td className="border border-slate-100 px-4 py-3 text-right text-slate-700">
                         {grandLiters}
                       </td>
-                      <td className="border p-3 text-right">
+                      <td className="border border-slate-100 px-4 py-3 text-right text-emerald-700">
                         {formatCurrency(grandAmount)}
                       </td>
                     </tr>

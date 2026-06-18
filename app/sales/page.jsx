@@ -18,6 +18,7 @@ export default function Sales() {
     customer_name: "",
     bill_date: "",
     rate_perliter: "",
+     session: "",
     items: [
       {
         product_name: "",
@@ -32,6 +33,8 @@ export default function Sales() {
       ? localStorage.getItem("token")
       : null;
   const router = useRouter();
+
+  const getSessionValue = (row) => row.session ?? row.session_name ?? row.shift ?? "N/A";
 
   useEffect(() => {
     fetchBills();
@@ -55,6 +58,8 @@ export default function Sales() {
       });
 
       const data = await response.json();
+
+      console.log(data.data[0]);
 
       if (data.success) {
         setBills(data.data);
@@ -113,6 +118,7 @@ export default function Sales() {
         customer_name: formData.customer_name,
         bill_date: formData.bill_date,
         rate_perliter: Number(formData.rate_perliter),
+        session: formData.session,
         items: formData.items.map((item) => ({
           product_name: item.product_name,
           quantity: Number(item.quantity),
@@ -133,6 +139,8 @@ export default function Sales() {
 
       const data = await response.json();
 
+      console.log(data.data[0]);
+
       if (!response.ok) {
         throw new Error(
           data.detail || "Failed to create bill"
@@ -144,7 +152,8 @@ export default function Sales() {
       setFormData({
         customer_name: "",
         bill_date: "",
-        rate_perliter: "",
+        session: "",
+        // rate_perliter: "",
         items: [
           {
             product_name: "",
@@ -269,15 +278,17 @@ export default function Sales() {
               className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
 
-            {/* <input
-              type="number"
-              name="rate_perliter"
-              placeholder="Rate Per Liter"
-              value={formData.rate_perliter}
+             <select
+              name="session"
+              value={formData.session}
               onChange={handleInputChange}
+              className="w-full p-3 border rounded"
               required
-              className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            /> */}
+            >
+              <option value="">Select Session</option>
+              <option value="Morning">Morning</option>
+              <option value="Evening">Evening</option>
+            </select>
           </div> 
 
           <h3 className="text-xl font-semibold mb-4">
@@ -342,14 +353,14 @@ export default function Sales() {
             <button
               type="button"
               onClick={addItem}
-              className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition"
+              className="rounded-lg border border-black bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
             >
               Add Item
             </button>
 
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
+              className="rounded-lg border border-black bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
             >
               Create Bill
             </button>
@@ -358,7 +369,7 @@ export default function Sales() {
       </div>
 
       {/* Bills Table */}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-2xl font-semibold mb-4">
           All Bills
         </h2>
@@ -369,43 +380,51 @@ export default function Sales() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full border">
+            <table className="min-w-full border-collapse text-sm">
   <thead>
-    <tr className="bg-gray-200">
-      <th className="border px-4 py-2">Bill ID</th>
-      <th className="border px-4 py-2">Customer</th>
-      <th className="border px-4 py-2">Date</th>
-      <th className="border px-4 py-2">Product</th>
-      <th className="border px-4 py-2">Quantity</th>
-      <th className="border px-4 py-2">Rate</th>
-      <th className="border px-4 py-2">Amount</th>
-      <th className="border px-4 py-2">Actions</th>
+    <tr className="bg-slate-50 text-left">
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Bill ID</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Customer</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Date</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Product</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Quantity</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Rate</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Amount</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Session</th>
+      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Actions</th>
     </tr>
   </thead>
 
   <tbody>
     {sales.map((row) => (
-      <tr key={`${row.id}-${row.product_name}`}>
-        <td className="border px-4 py-2">{row.id}</td>
-        <td className="border px-4 py-2">{row.customer_name}</td>
-        <td className="border px-4 py-2">{row.bill_date}</td>
-        <td className="border px-4 py-2">{row.product_name}</td>
-        <td className="border px-4 py-2">{row.quantity}</td>
-        <td className="border px-4 py-2">₹{row.rate}</td>
-        <td className="border px-4 py-2">₹{row.amount}</td>
-        <td className="border px-4 py-2">
-          <button
-            onClick={() => router.push(`/bill/${row.id}`)}
-            className="mr-2 rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
-          >
-            View
-          </button>
-          <button
-            onClick={() => deleteReport(row.id)}
-            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-          >
-            Delete
-          </button>
+      <tr key={`${row.id}-${row.product_name}`} className="border-t border-slate-100 even:bg-slate-50/60 hover:bg-slate-100/70 transition-colors">
+        <td className="px-4 py-3 text-slate-700">{row.id}</td>
+        <td className="px-4 py-3 text-slate-900">{row.customer_name}</td>
+        <td className="px-4 py-3 text-slate-700">{row.bill_date}</td>
+        <td className="px-4 py-3 text-slate-700">{row.product_name}</td>
+        <td className="px-4 py-3 text-slate-700">{row.quantity}</td>
+        <td className="px-4 py-3 text-slate-700">₹{row.rate}</td>
+        <td className="px-4 py-3 text-slate-700">₹{row.amount}</td>
+        <td className="px-4 py-3 text-slate-700">{getSessionValue(row)}</td>
+        <td className="px-4 py-3 text-slate-700">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() =>
+                router.push(
+                  `/bill/${row.id}?session=${encodeURIComponent(getSessionValue(row))}`
+                )
+              }
+              className="rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100"
+            >
+              View
+            </button>
+            <button
+              onClick={() => deleteReport(row.id)}
+              className="rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100"
+            >
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
     ))}

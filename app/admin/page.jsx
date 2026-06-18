@@ -250,7 +250,7 @@ export default function Admin() {
             Admin Panel
           </h1>
 
-          <div className="bg-white p-5 rounded shadow">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
             {/* HEADER */}
             <div className="flex justify-between items-center mb-4">
@@ -260,7 +260,7 @@ export default function Admin() {
 
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+                className="rounded-md border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
               >
                 + Create User
               </button>
@@ -277,13 +277,13 @@ export default function Admin() {
             {loading ? (
               <p>Loading users...</p>
             ) : (
-              <table className="w-full border-collapse">
+              <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="bg-gray-100 text-left">
-                    <th className="p-3">ID</th>
-                    <th className="p-3">Username</th>
-                    <th className="p-3">Role</th>
-                    <th className="p-3">Actions</th>
+                  <tr className="bg-slate-50 text-left">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">ID</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Username</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Role</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-600">Actions</th>
                   </tr>
                 </thead>
 
@@ -292,32 +292,32 @@ export default function Admin() {
                     users.map((user) => (
                       <tr
                         key={user.id}
-                        className="border-t hover:bg-gray-50"
+                        className="border-t border-slate-100 even:bg-slate-50/60 hover:bg-slate-100/70 transition-colors"
                       >
-                        <td className="p-3">{user.id}</td>
+                        <td className="px-4 py-3 text-slate-700">{user.id}</td>
 
-                        <td className="p-3">
+                        <td className="px-4 py-3 text-slate-900">
                           {user.username}
                         </td>
 
-                        <td className="p-3">
+                        <td className="px-4 py-3">
                           <span
-                            className={`px-2 py-1 rounded text-white text-sm ${
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
                               user.role === "admin"
-                                ? "bg-red-500"
+                                ? "bg-rose-100 text-rose-700 ring-1 ring-rose-200"
                                 : user.role === "milk_entry"
-                                ? "bg-green-500"
-                                : "bg-blue-500"
+                                ? "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+                                : "bg-sky-100 text-sky-700 ring-1 ring-sky-200"
                             }`}
                           >
                             {user.role}
                           </span>
                         </td>
 
-                        <td className="p-3 flex gap-2">
+                        <td className="px-4 py-3">
                           <button
                             onClick={() => deleteUser(user.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                            className="inline-flex items-center justify-center rounded-md border border-black bg-white px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-gray-100"
                           >
                             Delete
                           </button>
@@ -399,7 +399,7 @@ export default function Admin() {
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="bg-gray-300 px-4 py-2 rounded"
+                    className="rounded-md border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100"
                   >
                     Cancel
                   </button>
@@ -407,7 +407,7 @@ export default function Admin() {
                   <button
                     type="submit"
                     disabled={creating}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    className="rounded-md border border-black bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-100 disabled:opacity-50"
                   >
                     {creating ? "Creating..." : "Create"}
                   </button>
