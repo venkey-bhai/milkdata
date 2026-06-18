@@ -1,0 +1,3 @@
+SECRET_KEY = "your-secret-key-change-this"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 5

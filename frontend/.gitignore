@@ -7,15 +7,9 @@ __pycache__/
 
 # Node
 node_modules/
-.next/
 
 # Environment
 .env
 
-# Generated files
-*.db
-*.pdf
-*.xlsx
-
-# Editor
-.vscode/
+.next/
+node_modules/
